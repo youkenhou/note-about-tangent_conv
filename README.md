@@ -126,5 +126,26 @@ tangent_conv:v1 bash
 
 假设一个文件为```12345.csv```，```pts/12345.csv```是一个```n行3列```的数组，```intensity/12345.csv```是一个```n行1列```的数组，```label/12345.csv```是一个```n行1列```的数组。
 
-tangent convolution的输入格式是n个文件夹，根据文件夹的名字来定义每一个输入文件，每个文件夹中包含了一个```scan.pcd```文件和一个```scan.labels```文件，根据作者的数据处理代码可以将阿里的数据```pts```转换为```scan.pcd```，```label```文件可以直接复制为```scan.labels```，改个名字就可以。
+tangent convolution的输入格式是n个文件夹，根据文件夹的名字来定义每一个输入文件，每个文件夹中包含了一个```scan.pcd```文件和一个```scan.labels```文件，根据作者的数据处理代码可以将阿里的数据```pts```转换为```scan.pcd```，```label```文件可以直接复制为```scan.labels```，改个名字就可以。脚本文件参考```data_pre-process.py```。
 
+按照作者提供的步骤，下一步应该编写config.json文件，参照semantic3d的格式修改一些参数。记录一些参数的含义：
+- "pre_min_cube_size"：室内场景为0.05，室外场景为0.1，应该是点云分割块的大小；
+- "pre_num_rotations"：precompute时旋转的次数，如果数据集够大的话，可以把值改为1；
+- "pre_dataset_dir"：训练集所在的位置，如果进行测试的话需要改为测试集的位置；
+- "pre_output_dir"：保存precompute结果的位置，同样，测试的话需要改为测试集precompute的位置；
+- "pre_dataset_param"：类别的名字，可以随便取，但是之后在```model.py```等文件中也要改成同样的名字；
+- "co_train_file"：包含训练集中每个点云名称的txt文件；
+- "co_test_file"：包含验证集/测试集中每个点云名称的txt文件；
+- "co_experiment_dir"：主要与其他参数连接，比如与接下来的"co_output_dir"；
+- "co_output_dir"：测试结果存放的文件夹；
+- "tt_max_iter_count"：迭代轮数；
+- "tt_batch_size"：batch size，根据显存进行调整
+其他参数基本上和作者提供的一样就可以。
+
+下一步是对训练数据进行分割，选出训练集和测试集，这个可以自行决定。
+
+接下来需要修改```tangent_conv/util/dataset_params.py```，添加阿里数据集的参数设定。
+- ```self.class_freq```中填写每个类别的占比，用于初始化权重；
+- ```self.color_map```中写上类别个数+1种颜色，第一个应该为unlabel的类别，其他自行定义。
+
+最后在```model.py```的```if dataset_type ==```部分加上自己定义的阿里数据的param，应该就没有问题了。
