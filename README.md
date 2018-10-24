@@ -149,3 +149,6 @@ tangent convolution的输入格式是n个文件夹，根据文件夹的名字来
 - ```self.color_map```中写上类别个数+1种颜色，第一个应该为unlabel的类别，其他自行定义。
 
 最后在```model.py```的```if dataset_type ==```部分加上自己定义的阿里数据的param，应该就没有问题了。
+
+放个训练之后的效果图留个纪念，虽然交上去的结果很差，给小车类别的点上了红色：
+![result visualization](https://github.com/youkenhou/note-about-tangent_conv/blob/master/result.png)
