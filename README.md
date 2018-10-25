@@ -31,7 +31,7 @@ tensorflow/tensorflow:1.3.0-gpu-py3 bash
 ```
 
 打开容器之后安装joblib
-
+**更新**：这里需要安装joblib 0.11版，否则跑semantic3d会出错。
 ```
 pip3 install joblib
 ```
@@ -106,6 +106,7 @@ apt-get install p7zip-full
 precompute.py中有旋转数据集以扩大的代码rotation，会把一个数据旋转八次，占巨大空间。
 
 作者的semantic3d数据读取部分有些bug，所以没有跑通。
+**更新**：上面装好joblib==0.11就不会有bug了
 
 上述容器配置好之后，可以使用commit将容器保存为新的镜像
 ```bash
